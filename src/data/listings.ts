@@ -4,7 +4,8 @@ export const listings: Listing[] = [
   {
     id: "1",
     name: "AutoMailFlow",
-    description: "Fully automated cold email outreach SaaS with AI-powered personalization. Zero manual intervention needed — runs on autopilot with Stripe billing.",
+    emoji: "📧",
+    description: "Fully automated cold email outreach SaaS with AI-powered personalization. Zero manual intervention — runs on complete autopilot with Stripe billing.",
     category: "SaaS · Email",
     mrr: 12400,
     askingPrice: 520000,
@@ -16,6 +17,7 @@ export const listings: Listing[] = [
   {
     id: "2",
     name: "DropShipBot",
+    emoji: "📦",
     description: "Automated dropshipping store with supplier integration, auto-fulfillment, and AI customer support. Minimal owner involvement.",
     category: "E-Commerce",
     mrr: 8200,
@@ -28,6 +30,7 @@ export const listings: Listing[] = [
   {
     id: "3",
     name: "ContentPilot",
+    emoji: "✍️",
     description: "AI content generation platform for agencies. Automated billing, content creation pipelines, and client dashboards.",
     category: "SaaS · Content",
     mrr: 18500,
@@ -40,6 +43,7 @@ export const listings: Listing[] = [
   {
     id: "4",
     name: "SEO RankTracker",
+    emoji: "📊",
     description: "Keyword rank tracking tool with automated reporting. Requires weekly monitoring for crawler health checks.",
     category: "SaaS · SEO",
     mrr: 5600,
@@ -52,6 +56,7 @@ export const listings: Listing[] = [
   {
     id: "5",
     name: "InvoiceNinja Pro",
+    emoji: "💰",
     description: "White-label invoicing platform for freelancers. Fully automated with payment processing and reminder sequences.",
     category: "SaaS · Finance",
     mrr: 22000,
@@ -64,6 +69,7 @@ export const listings: Listing[] = [
   {
     id: "6",
     name: "LeadScraper AI",
+    emoji: "🎯",
     description: "B2B lead generation tool with enrichment. Semi-autonomous — needs operator for data source updates monthly.",
     category: "SaaS · Sales",
     mrr: 3800,
