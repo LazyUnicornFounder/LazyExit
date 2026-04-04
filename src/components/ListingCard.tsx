@@ -69,9 +69,10 @@ const ListingCard = ({ listing, index = 0 }: { listing: Listing; index?: number 
     if (error) {
       toast.error("Failed to send message");
     } else {
-      toast.success("Offer sent! 🎉 The seller will be notified.");
+      toast.success("Offer sent! 🎉");
       setOfferOpen(false);
       setMessage("");
+      navigate(`/inbox?with=${listing.userId}&listing=${listing.id}`);
     }
   };
 
