@@ -9,6 +9,7 @@ import Auth from "./pages/Auth.tsx";
 import Dashboard from "./pages/Dashboard.tsx";
 import ListingForm from "./pages/ListingForm.tsx";
 import Admin from "./pages/Admin.tsx";
+import Inbox from "./pages/Inbox.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -26,6 +27,7 @@ const App = () => (
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/list" element={<ListingForm />} />
             <Route path="/admin" element={<Admin />} />
+            <Route path="/inbox" element={<Inbox />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
