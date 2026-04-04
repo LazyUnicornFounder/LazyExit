@@ -17,11 +17,6 @@ const categories = [
   { label: "Content", emoji: "✏️" },
 ];
 
-const stats = [
-  { label: "Businesses Listed", value: "240+", emoji: "🏪" },
-  { label: "Total MRR Listed", value: "$2.4M", emoji: "💸" },
-  { label: "Avg Autonomy Score", value: "78%", emoji: "🤖" },
-];
 
 const Index = () => {
   const { user, signOut } = useAuth();
@@ -71,6 +66,18 @@ const Index = () => {
       return matchSearch && matchCategory && matchAutonomy;
     });
   }, [search, activeCategory, minAutonomy, listings]);
+
+  const stats = useMemo(() => {
+    const totalMrr = listings.reduce((sum, l) => sum + l.mrr, 0);
+    const avgAutonomy = listings.length > 0
+      ? Math.round(listings.reduce((sum, l) => sum + l.autonomyScore, 0) / listings.length)
+      : 0;
+    return [
+      { label: "Businesses Listed", value: listings.length.toString(), emoji: "🏪" },
+      { label: "Total MRR Listed", value: `$${totalMrr.toLocaleString()}`, emoji: "💸" },
+      { label: "Avg Autonomy Score", value: `${avgAutonomy}%`, emoji: "🤖" },
+    ];
+  }, [listings]);
 
   return (
     <div className="min-h-screen bg-background">
