@@ -169,6 +169,30 @@ const ListingForm = () => {
               </div>
             </div>
 
+            {/* Pricing guidance */}
+            <div className="rounded-xl border border-border bg-secondary/50 p-4 space-y-2">
+              {form.mrr > 0 ? (
+                <>
+                  <p className="text-sm font-semibold text-foreground">
+                    💡 Suggested price range: <span className="text-primary">${(form.mrr * 24).toLocaleString()}</span> – <span className="text-primary">${(form.mrr * 48).toLocaleString()}</span>
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    Based on {form.mrr.toLocaleString()} MRR × 24–48 months (typical for autonomous businesses). Higher autonomy scores command higher multiples.
+                  </p>
+                </>
+              ) : (
+                <>
+                  <p className="text-sm font-semibold text-foreground">💡 No MRR? Here's how to price your business</p>
+                  <ul className="text-xs text-muted-foreground space-y-1 list-disc list-inside">
+                    <li><span className="font-medium text-foreground">Code + IP value:</span> What would it cost to rebuild from scratch? Price at 20–40% of that.</li>
+                    <li><span className="font-medium text-foreground">User base:</span> Active users = future revenue. ~$5–50 per active user depending on niche.</li>
+                    <li><span className="font-medium text-foreground">Domain & brand:</span> Established domains and social accounts add $500–5,000+.</li>
+                    <li><span className="font-medium text-foreground">Pre-revenue SaaS:</span> Typically sells for $1K–25K based on tech quality and market potential.</li>
+                  </ul>
+                </>
+              )}
+            </div>
+
             {/* Autonomy */}
             <div>
               <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider block mb-3">Autonomy Score</label>
