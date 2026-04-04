@@ -131,7 +131,12 @@ const Dashboard = () => {
                     <Edit className="h-4 w-4" />
                   </button>
                   <button
-                    onClick={() => toggleStatus(listing)}
+                    onClick={() => deleteListing(listing.id)}
+                    className="p-2 rounded-lg hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors"
+                    title="Delete"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
                     className="p-2 rounded-lg hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors"
                     title={listing.status === "published" ? "Unpublish" : "Publish"}
                   >
