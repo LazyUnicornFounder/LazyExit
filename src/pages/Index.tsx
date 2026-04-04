@@ -17,11 +17,6 @@ const categories = [
   { label: "Content", emoji: "✏️" },
 ];
 
-const stats = [
-  { label: "Businesses Listed", value: "240+", emoji: "🏪" },
-  { label: "Total MRR Listed", value: "$2.4M", emoji: "💸" },
-  { label: "Avg Autonomy Score", value: "78%", emoji: "🤖" },
-];
 
 const Index = () => {
   const { user, signOut } = useAuth();
