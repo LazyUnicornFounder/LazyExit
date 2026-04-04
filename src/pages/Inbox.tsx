@@ -57,39 +57,18 @@ const Inbox = () => {
     if (user) loadConversations();
   }, [user, authLoading]);
 
-  // Realtime subscription
+  // Poll for new messages every 5 seconds (Realtime removed for security)
   useEffect(() => {
     if (!user) return;
 
-    const channel = supabase
-      .channel("inbox-messages")
-      .on(
-        "postgres_changes",
-        { event: "INSERT", schema: "public", table: "messages" },
-        (payload) => {
-          const msg = payload.new as Message;
-          if (msg.sender_id === user.id || msg.recipient_id === user.id) {
-            // Refresh conversations
-            loadConversations();
-            // If we're in the active conversation, add the message
-            if (
-              activeConvo &&
-              ((msg.sender_id === activeConvo.partnerId && msg.listing_id === activeConvo.listingId) ||
-                (msg.sender_id === user.id && msg.listing_id === activeConvo.listingId))
-            ) {
-              setMessages((prev) => [...prev, msg]);
-              if (msg.recipient_id === user.id) {
-                supabase.from("messages").update({ read: true } as any).eq("id", msg.id).then(() => {});
-              }
-            }
-          }
-        }
-      )
-      .subscribe();
+    const interval = setInterval(() => {
+      loadConversations();
+      if (activeConvo) {
+        openConversation(activeConvo.partnerId, activeConvo.listingId);
+      }
+    }, 5000);
 
-    return () => {
-      supabase.removeChannel(channel);
-    };
+    return () => clearInterval(interval);
   }, [user, activeConvo]);
 
   useEffect(() => {
