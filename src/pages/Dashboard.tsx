@@ -129,6 +129,13 @@ const Dashboard = () => {
                 </div>
                 <div className="flex items-center gap-2">
                   <button
+                    onClick={() => navigate(`/list?edit=${listing.id}`)}
+                    className="p-2 rounded-lg hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors"
+                    title="Edit"
+                  >
+                    <Edit className="h-4 w-4" />
+                  </button>
+                  <button
                     onClick={() => toggleStatus(listing)}
                     className="p-2 rounded-lg hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors"
                     title={listing.status === "published" ? "Unpublish" : "Publish"}

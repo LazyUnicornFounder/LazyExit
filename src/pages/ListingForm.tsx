@@ -1,7 +1,7 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, Plus, Trash2, Save, Send } from "lucide-react";
+import { ArrowLeft, Plus, Trash2, Save, Send, Globe } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -13,7 +13,10 @@ const EMOJI_OPTIONS = ["📧", "📦", "✍️", "📊", "💰", "🎯", "🤖",
 const ListingForm = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const editId = searchParams.get("edit");
   const [loading, setLoading] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(!!editId);
   const [form, setForm] = useState({
     name: "",
     emoji: "🏪",
@@ -24,7 +27,32 @@ const ListingForm = () => {
     autonomy_score: 50,
     multiplier: 2.5,
     tech_stack: [""],
+    website_url: "",
   });
+
+  useEffect(() => {
+    if (editId && user) {
+      const load = async () => {
+        const { data } = await supabase.from("listings").select("*").eq("id", editId).eq("user_id", user.id).single();
+        if (data) {
+          setForm({
+            name: data.name,
+            emoji: data.emoji,
+            description: data.description,
+            category: data.category,
+            mrr: Number(data.mrr),
+            asking_price: Number(data.asking_price),
+            autonomy_score: data.autonomy_score,
+            multiplier: Number(data.multiplier),
+            tech_stack: data.tech_stack.length > 0 ? data.tech_stack : [""],
+            website_url: (data as any).website_url || "",
+          });
+        }
+        setInitialLoading(false);
+      };
+      load();
+    }
+  }, [editId, user]);
 
   const updateField = (field: string, value: any) => setForm((f) => ({ ...f, [field]: value }));
 
@@ -41,8 +69,7 @@ const ListingForm = () => {
     setLoading(true);
     try {
       const techStack = form.tech_stack.filter((t) => t.trim());
-      const { error } = await supabase.from("listings").insert({
-        user_id: user.id,
+      const payload = {
         name: form.name,
         emoji: form.emoji,
         description: form.description,
@@ -52,10 +79,19 @@ const ListingForm = () => {
         autonomy_score: form.autonomy_score,
         multiplier: form.multiplier,
         tech_stack: techStack,
+        website_url: form.website_url || null,
         status,
-      });
-      if (error) throw error;
-      toast.success(status === "published" ? "Listed! 🎉" : "Saved as draft! 📝");
+      } as any;
+
+      if (editId) {
+        const { error } = await supabase.from("listings").update(payload).eq("id", editId);
+        if (error) throw error;
+        toast.success("Updated! ✅");
+      } else {
+        const { error } = await supabase.from("listings").insert({ ...payload, user_id: user.id });
+        if (error) throw error;
+        toast.success(status === "published" ? "Listed! 🎉" : "Saved as draft! 📝");
+      }
       navigate("/dashboard");
     } catch (err: any) {
       toast.error(err.message);
@@ -69,6 +105,14 @@ const ListingForm = () => {
     return null;
   }
 
+  if (initialLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <span className="text-4xl animate-bounce-in">😴</span>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background">
       <div className="container max-w-2xl py-10">
@@ -77,8 +121,12 @@ const ListingForm = () => {
         </button>
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-          <h1 className="font-display text-3xl font-bold gradient-text mb-2">List a Business 🚀</h1>
-          <p className="text-muted-foreground mb-8">Add your autonomous business to the marketplace.</p>
+          <h1 className="font-display text-3xl font-bold gradient-text mb-2">
+            {editId ? "Edit Business ✏️" : "List a Business 🚀"}
+          </h1>
+          <p className="text-muted-foreground mb-8">
+            {editId ? "Update your business listing." : "Add your autonomous business to the marketplace."}
+          </p>
 
           <div className="space-y-6">
             {/* Name + Emoji */}
@@ -107,6 +155,20 @@ const ListingForm = () => {
                   className="w-full rounded-xl border border-border bg-card px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
                 />
               </div>
+            </div>
+
+            {/* Website URL */}
+            <div>
+              <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider block mb-1.5 flex items-center gap-1.5">
+                <Globe className="h-3.5 w-3.5" /> Website URL
+              </label>
+              <input
+                value={form.website_url}
+                onChange={(e) => updateField("website_url", e.target.value)}
+                placeholder="https://yourbusiness.com"
+                type="url"
+                className="w-full rounded-xl border border-border bg-card px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
+              />
             </div>
 
             {/* Description */}
@@ -248,7 +310,7 @@ const ListingForm = () => {
                 disabled={loading || !form.name || !form.description}
                 className="flex-1 flex items-center justify-center gap-2 rounded-xl gradient-fun py-3 text-sm font-bold text-primary-foreground shadow-lg shadow-primary/20 disabled:opacity-50 transition-shadow"
               >
-                <Send className="h-4 w-4" /> Publish 🚀
+                <Send className="h-4 w-4" /> {editId ? "Update 🚀" : "Publish 🚀"}
               </motion.button>
             </div>
           </div>

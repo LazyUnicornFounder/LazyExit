@@ -39,7 +39,7 @@ const Index = () => {
 
       if (data) {
         setListings(
-          data.map((d) => ({
+          data.map((d: any) => ({
             id: d.id,
             name: d.name,
             emoji: d.emoji,
@@ -51,6 +51,8 @@ const Index = () => {
             multiplier: Number(d.multiplier),
             techStack: d.tech_stack,
             verified: d.verified,
+            websiteUrl: d.website_url,
+            userId: d.user_id,
           }))
         );
       }
