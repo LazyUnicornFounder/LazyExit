@@ -31,6 +31,7 @@ export type Database = {
           updated_at: string
           user_id: string
           verified: boolean
+          website_url: string | null
         }
         Insert: {
           asking_price?: number
@@ -48,6 +49,7 @@ export type Database = {
           updated_at?: string
           user_id: string
           verified?: boolean
+          website_url?: string | null
         }
         Update: {
           asking_price?: number
@@ -65,8 +67,44 @@ export type Database = {
           updated_at?: string
           user_id?: string
           verified?: boolean
+          website_url?: string | null
         }
         Relationships: []
+      }
+      messages: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          listing_id: string
+          recipient_id: string
+          sender_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          listing_id: string
+          recipient_id: string
+          sender_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          listing_id?: string
+          recipient_id?: string
+          sender_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "listings"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
