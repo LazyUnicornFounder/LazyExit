@@ -1,8 +1,11 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Search, SlidersHorizontal, Rocket, ShieldCheck, Bot, Sparkles, Zap } from "lucide-react";
+import { Search, SlidersHorizontal, Rocket, ShieldCheck, Bot, Sparkles, Zap, LogIn, User } from "lucide-react";
 import ListingCard from "@/components/ListingCard";
-import { listings } from "@/data/listings";
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
+import type { Listing } from "@/components/ListingCard";
 
 const categories = [
   { label: "All", emoji: "🌐" },
@@ -21,9 +24,43 @@ const stats = [
 ];
 
 const Index = () => {
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
   const [minAutonomy, setMinAutonomy] = useState(0);
+  const [listings, setListings] = useState<Listing[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchListings = async () => {
+      const { data } = await supabase
+        .from("listings")
+        .select("*")
+        .eq("status", "published")
+        .order("created_at", { ascending: false });
+
+      if (data) {
+        setListings(
+          data.map((d) => ({
+            id: d.id,
+            name: d.name,
+            emoji: d.emoji,
+            description: d.description,
+            category: d.category,
+            mrr: Number(d.mrr),
+            askingPrice: Number(d.asking_price),
+            autonomyScore: d.autonomy_score,
+            multiplier: Number(d.multiplier),
+            techStack: d.tech_stack,
+            verified: d.verified,
+          }))
+        );
+      }
+      setLoading(false);
+    };
+    fetchListings();
+  }, []);
 
   const filtered = useMemo(() => {
     return listings.filter((l) => {
@@ -33,7 +70,7 @@ const Index = () => {
       const matchAutonomy = l.autonomyScore >= minAutonomy;
       return matchSearch && matchCategory && matchAutonomy;
     });
-  }, [search, activeCategory, minAutonomy]);
+  }, [search, activeCategory, minAutonomy, listings]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -41,34 +78,52 @@ const Index = () => {
       <nav className="border-b border-border sticky top-0 z-50 bg-background/80 backdrop-blur-xl">
         <div className="container flex items-center justify-between h-16">
           <motion.div
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 cursor-pointer"
             whileHover={{ scale: 1.05 }}
             transition={{ type: "spring", stiffness: 400 }}
+            onClick={() => navigate("/")}
           >
-            <span className="text-2xl">🤖</span>
-            <span className="font-display font-bold text-xl gradient-text">AutoAcquire</span>
+            <span className="text-2xl">😴</span>
+            <span className="font-display font-bold text-xl gradient-text">Lazy Exit</span>
           </motion.div>
-          <div className="flex items-center gap-5">
-            <button className="text-sm text-muted-foreground hover:text-foreground transition-colors font-medium">Browse</button>
-            <button className="text-sm text-muted-foreground hover:text-foreground transition-colors font-medium">How it Works</button>
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="rounded-xl gradient-fun px-5 py-2.5 text-sm font-bold text-primary-foreground shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-shadow"
-            >
-              🚀 List Your Business
-            </motion.button>
+          <div className="flex items-center gap-4">
+            {user ? (
+              <>
+                <button onClick={() => navigate("/dashboard")} className="text-sm text-muted-foreground hover:text-foreground transition-colors font-medium flex items-center gap-1.5">
+                  <User className="h-4 w-4" /> My Businesses
+                </button>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => navigate("/list")}
+                  className="rounded-xl gradient-fun px-5 py-2.5 text-sm font-bold text-primary-foreground shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-shadow"
+                >
+                  🚀 List Your Business
+                </motion.button>
+                <button onClick={signOut} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                  Sign out
+                </button>
+              </>
+            ) : (
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => navigate("/auth")}
+                className="rounded-xl gradient-fun px-5 py-2.5 text-sm font-bold text-primary-foreground shadow-lg shadow-primary/20 flex items-center gap-2"
+              >
+                <LogIn className="h-4 w-4" /> Sign In
+              </motion.button>
+            )}
           </div>
         </div>
       </nav>
 
       {/* Hero */}
       <section className="relative overflow-hidden border-b border-border">
-        {/* Fun background blobs */}
         <div className="absolute top-20 left-10 w-72 h-72 bg-primary/10 rounded-full blur-3xl animate-float" />
         <div className="absolute bottom-10 right-20 w-96 h-96 bg-fun-pink/8 rounded-full blur-3xl animate-float" style={{ animationDelay: "1s" }} />
         <div className="absolute top-40 right-40 w-48 h-48 bg-accent/8 rounded-full blur-3xl animate-float" style={{ animationDelay: "2s" }} />
-        
+
         <div className="container relative py-20 md:py-28">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
@@ -83,27 +138,27 @@ const Index = () => {
               className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-2 mb-6"
             >
               <Sparkles className="h-4 w-4 text-primary animate-pulse-glow" />
-              <span className="text-sm font-semibold text-primary">The marketplace for autonomous businesses</span>
+              <span className="text-sm font-semibold text-primary">The marketplace for lazy entrepreneurs</span>
             </motion.div>
-            
+
             <h1 className="font-display text-5xl md:text-7xl font-bold tracking-tight text-foreground leading-[1.05] mb-5">
-              Buy & sell businesses
+              Sell your business,
               <br />
-              that <span className="gradient-text">run themselves</span>{" "}
+              <span className="gradient-text">take a nap</span>{" "}
               <motion.span
                 className="inline-block"
                 animate={{ rotate: [0, 14, -8, 14, -4, 10, 0] }}
                 transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 3 }}
               >
-                ✨
+                😴
               </motion.span>
             </h1>
-            
+
             <p className="text-lg text-secondary-foreground max-w-xl leading-relaxed mb-8">
               Every listing features <span className="text-verified font-semibold">verified MRR</span> and an{" "}
               <span className="text-primary font-semibold">autonomy score</span> so you know exactly how hands-off the business truly is.
             </p>
-            
+
             <div className="flex items-center gap-6 flex-wrap">
               <motion.div whileHover={{ scale: 1.05 }} className="flex items-center gap-2 text-sm text-muted-foreground bg-secondary/50 rounded-full px-4 py-2 border border-border">
                 <ShieldCheck className="h-4 w-4 text-verified" />
@@ -122,18 +177,12 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Stats bar */}
+      {/* Stats */}
       <section className="border-b border-border bg-card/50">
         <div className="container py-6">
           <div className="grid grid-cols-3 gap-6">
             {stats.map((stat, i) => (
-              <motion.div
-                key={stat.label}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 + i * 0.1 }}
-                className="text-center"
-              >
+              <motion.div key={stat.label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 + i * 0.1 }} className="text-center">
                 <span className="text-2xl mb-1 block">{stat.emoji}</span>
                 <span className="font-display font-bold text-2xl text-foreground">{stat.value}</span>
                 <span className="text-xs text-muted-foreground block mt-0.5 font-medium">{stat.label}</span>
@@ -143,11 +192,10 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Filters & Search */}
+      {/* Filters */}
       <section className="border-b border-border bg-background sticky top-16 z-40 backdrop-blur-xl">
         <div className="container py-4">
           <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
-            {/* Search */}
             <div className="relative flex-1 max-w-md">
               <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <input
@@ -158,8 +206,6 @@ const Index = () => {
                 className="w-full rounded-xl border border-border bg-card pl-10 pr-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/50 transition-all"
               />
             </div>
-
-            {/* Categories */}
             <div className="flex items-center gap-2 flex-wrap">
               {categories.map((cat) => (
                 <motion.button
@@ -178,19 +224,10 @@ const Index = () => {
                 </motion.button>
               ))}
             </div>
-
-            {/* Autonomy filter */}
             <div className="flex items-center gap-2 bg-secondary rounded-xl px-3 py-2 border border-border">
               <SlidersHorizontal className="h-4 w-4 text-primary" />
               <span className="text-xs text-muted-foreground whitespace-nowrap font-semibold">🤖 Min: {minAutonomy}%</span>
-              <input
-                type="range"
-                min={0}
-                max={100}
-                value={minAutonomy}
-                onChange={(e) => setMinAutonomy(Number(e.target.value))}
-                className="w-24 accent-primary"
-              />
+              <input type="range" min={0} max={100} value={minAutonomy} onChange={(e) => setMinAutonomy(Number(e.target.value))} className="w-24 accent-primary" />
             </div>
           </div>
         </div>
@@ -202,7 +239,7 @@ const Index = () => {
           <div className="flex items-center gap-3">
             <Rocket className="h-5 w-5 text-primary" />
             <h2 className="font-display text-2xl font-bold text-foreground">
-              {filtered.length} {filtered.length === 1 ? "business" : "businesses"} ready to acquire
+              {loading ? "Loading..." : `${filtered.length} ${filtered.length === 1 ? "business" : "businesses"} ready to acquire`}
             </h2>
           </div>
         </div>
@@ -211,12 +248,8 @@ const Index = () => {
             <ListingCard key={listing.id} listing={listing} index={i} />
           ))}
         </div>
-        {filtered.length === 0 && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="text-center py-20"
-          >
+        {!loading && filtered.length === 0 && (
+          <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="text-center py-20">
             <span className="text-6xl block mb-4">🤷</span>
             <p className="text-muted-foreground text-lg font-medium">No businesses match your criteria.</p>
             <p className="text-muted-foreground text-sm mt-1">Try adjusting your filters!</p>
@@ -228,11 +261,11 @@ const Index = () => {
       <footer className="border-t border-border py-8 bg-card/30">
         <div className="container flex items-center justify-between text-sm text-muted-foreground">
           <span className="flex items-center gap-2">
-            <span>🤖</span>
-            <span className="font-display font-semibold gradient-text">AutoAcquire</span>
+            <span>😴</span>
+            <span className="font-display font-semibold gradient-text">Lazy Exit</span>
             <span>© 2026</span>
           </span>
-          <span>Built for autonomous entrepreneurs ⚡</span>
+          <span>Built for lazy entrepreneurs ⚡</span>
         </div>
       </footer>
     </div>
