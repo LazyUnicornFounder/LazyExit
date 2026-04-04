@@ -154,16 +154,14 @@ const ListingCard = ({ listing, index = 0 }: { listing: Listing; index?: number 
         </div>
 
         {/* Make an Offer button */}
-        {listing.userId !== user?.id && (
-          <motion.button
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.97 }}
-            onClick={handleOffer}
-            className="w-full flex items-center justify-center gap-2 rounded-xl gradient-fun py-2.5 text-sm font-bold text-primary-foreground shadow-lg shadow-primary/20 transition-shadow hover:shadow-primary/40"
-          >
-            <MessageCircle className="h-4 w-4" /> Make an Offer
-          </motion.button>
-        )}
+        <motion.button
+          whileHover={{ scale: 1.03 }}
+          whileTap={{ scale: 0.97 }}
+          onClick={handleOffer}
+          className="w-full flex items-center justify-center gap-2 rounded-xl gradient-fun py-2.5 text-sm font-bold text-primary-foreground shadow-lg shadow-primary/20 transition-shadow hover:shadow-primary/40"
+        >
+          <MessageCircle className="h-4 w-4" /> Make an Offer
+        </motion.button>
       </motion.div>
 
       {/* Offer Dialog */}
