@@ -113,8 +113,12 @@ const Dashboard = () => {
                     <span>•</span>
                     <span>{formatCurrency(listing.mrr)}/mo</span>
                     <span>•</span>
-                    <span className={listing.status === "published" ? "text-accent font-semibold" : "text-muted-foreground"}>
-                      {listing.status === "published" ? "🟢 Live" : listing.status === "sold" ? "🔴 Sold" : "⚪ Draft"}
+                    <span className={
+                      listing.status === "published" ? "text-accent font-semibold" :
+                      listing.status === "rejected" ? "text-destructive font-semibold" :
+                      "text-muted-foreground"
+                    }>
+                      {listing.status === "published" ? "🟢 Live" : listing.status === "rejected" ? "🔴 Rejected" : "⏳ Pending review"}
                     </span>
                   </div>
                 </div>
