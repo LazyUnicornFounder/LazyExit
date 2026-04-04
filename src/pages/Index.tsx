@@ -142,21 +142,19 @@ const Index = () => {
             </motion.div>
 
             <h1 className="font-display text-5xl md:text-7xl font-bold tracking-tight text-foreground leading-[1.05] mb-5">
-              Sell your business,
-              <br />
-              <span className="gradient-text">take a nap</span>{" "}
+              The marketplace for{" "}
+              <span className="gradient-text">autonomous businesses</span>{" "}
               <motion.span
                 className="inline-block"
                 animate={{ rotate: [0, 14, -8, 14, -4, 10, 0] }}
                 transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 3 }}
               >
-                😴
+                🚀
               </motion.span>
             </h1>
 
             <p className="text-lg text-secondary-foreground max-w-xl leading-relaxed mb-8">
-              Every listing features <span className="text-verified font-semibold">verified MRR</span> and an{" "}
-              <span className="text-primary font-semibold">autonomy score</span> so you know exactly how hands-off the business truly is.
+              Verified MRR, autonomy scores, and instant transfers.
             </p>
 
             <div className="flex items-center gap-6 flex-wrap">
