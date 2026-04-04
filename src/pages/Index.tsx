@@ -105,6 +105,9 @@ const Index = () => {
                     <ShieldCheck className="h-4 w-4" /> Admin
                   </button>
                 )}
+                <button onClick={() => navigate("/inbox")} className="text-sm text-muted-foreground hover:text-foreground transition-colors font-medium flex items-center gap-1.5">
+                  <MessageCircle className="h-4 w-4" /> Messages
+                </button>
                 <button onClick={() => navigate("/dashboard")} className="text-sm text-muted-foreground hover:text-foreground transition-colors font-medium flex items-center gap-1.5">
                   <User className="h-4 w-4" /> My Businesses
                 </button>
