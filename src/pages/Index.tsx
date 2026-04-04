@@ -274,6 +274,37 @@ const Index = () => {
         )}
       </section>
 
+      {/* About */}
+      <section className="border-t border-border bg-card/30">
+        <div className="container py-16 md:py-20">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="max-w-2xl mx-auto text-center"
+          >
+            <span className="text-4xl mb-4 block">😴</span>
+            <h2 className="font-display text-3xl font-bold text-foreground mb-4">About Lazy Exit</h2>
+            <p className="text-muted-foreground leading-relaxed mb-4">
+              Lazy Exit is the marketplace for autonomous businesses — companies that generate revenue with minimal owner involvement. We verify MRR, audit autonomy scores, and facilitate instant transfers so you can buy or sell with confidence.
+            </p>
+            <p className="text-muted-foreground leading-relaxed">
+              Lazy Exit is part of{" "}
+              <a
+                href="https://lazyfactoryventures.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-semibold text-primary hover:underline"
+              >
+                Lazy Factory Ventures
+              </a>
+              , a venture studio building tools and platforms for the next generation of hands-off entrepreneurs.
+            </p>
+          </motion.div>
+        </div>
+      </section>
+
       {/* Footer */}
       <footer className="border-t border-border py-8 bg-card/30">
         <div className="container flex items-center justify-between text-sm text-muted-foreground">
