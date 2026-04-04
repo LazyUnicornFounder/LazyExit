@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Search, SlidersHorizontal, Rocket, ShieldCheck, Bot, Sparkles, Zap, LogIn, User } from "lucide-react";
 import ListingCard from "@/components/ListingCard";
 import { useAuth } from "@/contexts/AuthContext";
+import { useIsAdmin } from "@/hooks/useIsAdmin";
 import { supabase } from "@/integrations/supabase/client";
 import type { Listing } from "@/components/ListingCard";
 
