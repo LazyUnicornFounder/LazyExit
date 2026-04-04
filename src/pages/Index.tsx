@@ -173,7 +173,7 @@ const Index = () => {
             </h1>
 
             <p className="text-lg text-secondary-foreground max-w-xl leading-relaxed mb-8">
-              Verified MRR, autonomy scores, and instant transfers.
+              Buy and sell businesses that run themselves. Verified MRR, autonomy scores, and instant transfers.
             </p>
 
             <div className="flex items-center gap-6 flex-wrap">
