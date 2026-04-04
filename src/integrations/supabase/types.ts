@@ -77,6 +77,7 @@ export type Database = {
           created_at: string
           id: string
           listing_id: string
+          read: boolean
           recipient_id: string
           sender_id: string
         }
@@ -85,6 +86,7 @@ export type Database = {
           created_at?: string
           id?: string
           listing_id: string
+          read?: boolean
           recipient_id: string
           sender_id: string
         }
@@ -93,6 +95,7 @@ export type Database = {
           created_at?: string
           id?: string
           listing_id?: string
+          read?: boolean
           recipient_id?: string
           sender_id?: string
         }
