@@ -64,7 +64,7 @@ const ListingForm = () => {
     updateField("tech_stack", arr);
   };
 
-  const handleSubmit = async (status: "draft" | "published") => {
+  const handleSubmit = async () => {
     if (!user) return;
     setLoading(true);
     try {
@@ -80,17 +80,17 @@ const ListingForm = () => {
         multiplier: form.multiplier,
         tech_stack: techStack,
         website_url: form.website_url || null,
-        status,
+        status: "draft",
       } as any;
 
       if (editId) {
         const { error } = await supabase.from("listings").update(payload).eq("id", editId);
         if (error) throw error;
-        toast.success("Updated! ✅");
+        toast.success("Updated! Your listing will be reviewed by an admin. ✅");
       } else {
         const { error } = await supabase.from("listings").insert({ ...payload, user_id: user.id });
         if (error) throw error;
-        toast.success(status === "published" ? "Listed! 🎉" : "Saved as draft! 📝");
+        toast.success("Submitted for review! ⏳ An admin will approve it shortly.");
       }
       navigate("/dashboard");
     } catch (err: any) {
