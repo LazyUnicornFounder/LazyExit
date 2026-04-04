@@ -34,15 +34,6 @@ const Dashboard = () => {
     setLoading(false);
   };
 
-  const toggleStatus = async (listing: Listing) => {
-    const newStatus = listing.status === "published" ? "draft" : "published";
-    const { error } = await supabase.from("listings").update({ status: newStatus }).eq("id", listing.id);
-    if (error) toast.error(error.message);
-    else {
-      toast.success(newStatus === "published" ? "Published! 🎉" : "Unpublished");
-      fetchListings();
-    }
-  };
 
   const deleteListing = async (id: string) => {
     const { error } = await supabase.from("listings").delete().eq("id", id);
