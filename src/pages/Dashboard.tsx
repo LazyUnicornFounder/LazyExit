@@ -137,18 +137,6 @@ const Dashboard = () => {
                   >
                     <Trash2 className="h-4 w-4" />
                   </button>
-                    className="p-2 rounded-lg hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors"
-                    title={listing.status === "published" ? "Unpublish" : "Publish"}
-                  >
-                    {listing.status === "published" ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </button>
-                  <button
-                    onClick={() => deleteListing(listing.id)}
-                    className="p-2 rounded-lg hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors"
-                    title="Delete"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </button>
                 </div>
               </motion.div>
             ))}
