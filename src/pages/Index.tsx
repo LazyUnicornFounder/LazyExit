@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Search, SlidersHorizontal, Rocket, ShieldCheck, Bot, Sparkles, Zap, LogIn, User } from "lucide-react";
 import ListingCard from "@/components/ListingCard";
 import { useAuth } from "@/contexts/AuthContext";
+import { useIsAdmin } from "@/hooks/useIsAdmin";
 import { supabase } from "@/integrations/supabase/client";
 import type { Listing } from "@/components/ListingCard";
 
@@ -20,6 +21,7 @@ const categories = [
 
 const Index = () => {
   const { user, signOut } = useAuth();
+  const { isAdmin } = useIsAdmin();
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
@@ -96,6 +98,11 @@ const Index = () => {
           <div className="flex items-center gap-4">
             {user ? (
               <>
+                {isAdmin && (
+                  <button onClick={() => navigate("/admin")} className="text-sm text-muted-foreground hover:text-foreground transition-colors font-medium flex items-center gap-1.5">
+                    <ShieldCheck className="h-4 w-4" /> Admin
+                  </button>
+                )}
                 <button onClick={() => navigate("/dashboard")} className="text-sm text-muted-foreground hover:text-foreground transition-colors font-medium flex items-center gap-1.5">
                   <User className="h-4 w-4" /> My Businesses
                 </button>
