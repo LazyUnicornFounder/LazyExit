@@ -98,6 +98,11 @@ const Index = () => {
           <div className="flex items-center gap-4">
             {user ? (
               <>
+                {isAdmin && (
+                  <button onClick={() => navigate("/admin")} className="text-sm text-muted-foreground hover:text-foreground transition-colors font-medium flex items-center gap-1.5">
+                    <ShieldCheck className="h-4 w-4" /> Admin
+                  </button>
+                )}
                 <button onClick={() => navigate("/dashboard")} className="text-sm text-muted-foreground hover:text-foreground transition-colors font-medium flex items-center gap-1.5">
                   <User className="h-4 w-4" /> My Businesses
                 </button>
