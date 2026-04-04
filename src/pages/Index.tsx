@@ -142,10 +142,10 @@ const Index = () => {
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-              className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-2 mb-6"
+              className="inline-flex items-center gap-2 mb-6"
             >
-              <Sparkles className="h-4 w-4 text-primary animate-pulse-glow" />
-              <span className="text-sm font-semibold text-primary">The marketplace for lazy entrepreneurs</span>
+              <span className="rounded-md bg-primary px-2 py-0.5 text-xs font-bold uppercase tracking-widest text-primary-foreground">Beta</span>
+              <span className="text-sm font-semibold text-muted-foreground">The marketplace for lazy entrepreneurs</span>
             </motion.div>
 
             <h1 className="font-display text-5xl md:text-7xl font-bold tracking-tight text-foreground leading-[1.05] mb-5">
