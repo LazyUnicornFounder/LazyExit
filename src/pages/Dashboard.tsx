@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Plus, ArrowLeft, Edit, Trash2, Eye, EyeOff } from "lucide-react";
+import { Plus, ArrowLeft, Edit, Trash2 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -34,15 +34,6 @@ const Dashboard = () => {
     setLoading(false);
   };
 
-  const toggleStatus = async (listing: Listing) => {
-    const newStatus = listing.status === "published" ? "draft" : "published";
-    const { error } = await supabase.from("listings").update({ status: newStatus }).eq("id", listing.id);
-    if (error) toast.error(error.message);
-    else {
-      toast.success(newStatus === "published" ? "Published! 🎉" : "Unpublished");
-      fetchListings();
-    }
-  };
 
   const deleteListing = async (id: string) => {
     const { error } = await supabase.from("listings").delete().eq("id", id);
@@ -122,8 +113,12 @@ const Dashboard = () => {
                     <span>•</span>
                     <span>{formatCurrency(listing.mrr)}/mo</span>
                     <span>•</span>
-                    <span className={listing.status === "published" ? "text-accent font-semibold" : "text-muted-foreground"}>
-                      {listing.status === "published" ? "🟢 Live" : listing.status === "sold" ? "🔴 Sold" : "⚪ Draft"}
+                    <span className={
+                      listing.status === "published" ? "text-accent font-semibold" :
+                      listing.status === "rejected" ? "text-destructive font-semibold" :
+                      "text-muted-foreground"
+                    }>
+                      {listing.status === "published" ? "🟢 Live" : listing.status === "rejected" ? "🔴 Rejected" : "⏳ Pending review"}
                     </span>
                   </div>
                 </div>
@@ -134,13 +129,6 @@ const Dashboard = () => {
                     title="Edit"
                   >
                     <Edit className="h-4 w-4" />
-                  </button>
-                  <button
-                    onClick={() => toggleStatus(listing)}
-                    className="p-2 rounded-lg hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors"
-                    title={listing.status === "published" ? "Unpublish" : "Publish"}
-                  >
-                    {listing.status === "published" ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
                   <button
                     onClick={() => deleteListing(listing.id)}

@@ -64,7 +64,7 @@ const ListingForm = () => {
     updateField("tech_stack", arr);
   };
 
-  const handleSubmit = async (status: "draft" | "published") => {
+  const handleSubmit = async () => {
     if (!user) return;
     setLoading(true);
     try {
@@ -80,17 +80,17 @@ const ListingForm = () => {
         multiplier: form.multiplier,
         tech_stack: techStack,
         website_url: form.website_url || null,
-        status,
+        status: "draft",
       } as any;
 
       if (editId) {
         const { error } = await supabase.from("listings").update(payload).eq("id", editId);
         if (error) throw error;
-        toast.success("Updated! ✅");
+        toast.success("Updated! Your listing will be reviewed by an admin. ✅");
       } else {
         const { error } = await supabase.from("listings").insert({ ...payload, user_id: user.id });
         if (error) throw error;
-        toast.success(status === "published" ? "Listed! 🎉" : "Saved as draft! 📝");
+        toast.success("Submitted for review! ⏳ An admin will approve it shortly.");
       }
       navigate("/dashboard");
     } catch (err: any) {
@@ -293,25 +293,17 @@ const ListingForm = () => {
             </div>
 
             {/* Actions */}
-            <div className="flex gap-3 pt-4">
+            <div className="pt-4">
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                onClick={() => handleSubmit("draft")}
+                onClick={handleSubmit}
                 disabled={loading || !form.name || !form.description}
-                className="flex-1 flex items-center justify-center gap-2 rounded-xl border border-border bg-secondary py-3 text-sm font-semibold text-foreground hover:bg-secondary/80 disabled:opacity-50 transition-colors"
+                className="w-full flex items-center justify-center gap-2 rounded-xl gradient-fun py-3 text-sm font-bold text-primary-foreground shadow-lg shadow-primary/20 disabled:opacity-50 transition-shadow"
               >
-                <Save className="h-4 w-4" /> Save Draft
+                <Send className="h-4 w-4" /> {editId ? "Update & Resubmit for Review" : "Submit for Review ⏳"}
               </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => handleSubmit("published")}
-                disabled={loading || !form.name || !form.description}
-                className="flex-1 flex items-center justify-center gap-2 rounded-xl gradient-fun py-3 text-sm font-bold text-primary-foreground shadow-lg shadow-primary/20 disabled:opacity-50 transition-shadow"
-              >
-                <Send className="h-4 w-4" /> {editId ? "Update 🚀" : "Publish 🚀"}
-              </motion.button>
+              <p className="text-xs text-muted-foreground text-center mt-3">Your listing will be reviewed by an admin before going live.</p>
             </div>
           </div>
         </motion.div>
