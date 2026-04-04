@@ -126,7 +126,7 @@ const Inbox = () => {
     const listingIds = [...new Set([...convoMap.values()].map((c) => c.listingId))];
 
     const [{ data: profiles }, { data: listings }] = await Promise.all([
-      supabase.from("profiles").select("user_id, display_name, avatar_url").in("user_id", partnerIds),
+      supabase.rpc("get_public_profiles", { user_ids: partnerIds }),
       supabase.from("listings").select("id, name, emoji").in("id", listingIds),
     ]);
 
