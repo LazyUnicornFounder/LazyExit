@@ -7,6 +7,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useIsAdmin } from "@/hooks/useIsAdmin";
 import { supabase } from "@/integrations/supabase/client";
 import type { Listing } from "@/components/ListingCard";
+import OpenSourceBanner from "@/components/OpenSourceBanner";
 
 const categories = [
   { label: "All", emoji: "🌐" },
@@ -316,6 +317,7 @@ const Index = () => {
           <span>Built for lazy entrepreneurs ⚡</span>
         </div>
       </footer>
+          <OpenSourceBanner />
     </div>
   );
 };
