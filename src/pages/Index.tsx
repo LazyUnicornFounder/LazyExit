@@ -7,6 +7,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useIsAdmin } from "@/hooks/useIsAdmin";
 import { supabase } from "@/integrations/supabase/client";
 import type { Listing } from "@/components/ListingCard";
+import { sampleListings } from "@/data/listings";
 import OpenSourceBanner from "@/components/OpenSourceBanner";
 
 const categories = [
@@ -38,7 +39,7 @@ const Index = () => {
         .eq("status", "published")
         .order("created_at", { ascending: false });
 
-      if (data) {
+      if (data && data.length > 0) {
         setListings(
           data.map((d: any) => ({
             id: d.id,
@@ -56,6 +57,8 @@ const Index = () => {
             userId: d.user_id,
           }))
         );
+      } else {
+        setListings(sampleListings);
       }
       setLoading(false);
     };
