@@ -9,6 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 import type { Listing } from "@/components/ListingCard";
 import { sampleListings } from "@/data/listings";
 import OpenSourceBanner from "@/components/OpenSourceBanner";
+import PortfolioFooter from "@/components/PortfolioFooter";
 
 const categories = [
   { label: "All", emoji: "🌐" },
@@ -321,6 +322,7 @@ const Index = () => {
         </div>
       </footer>
           <OpenSourceBanner />
+          <PortfolioFooter />
     </div>
   );
 };

@@ -11,11 +11,13 @@ import ListingForm from "./pages/ListingForm.tsx";
 import Admin from "./pages/Admin.tsx";
 import Inbox from "./pages/Inbox.tsx";
 import NotFound from "./pages/NotFound.tsx";
+import ErrorBoundary from "@/components/ErrorBoundary";
 
 const queryClient = new QueryClient();
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
+  <ErrorBoundary>
+    <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Toaster />
       <Sonner />
@@ -34,6 +36,7 @@ const App = () => (
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
+    </ErrorBoundary>
 );
 
 export default App;
