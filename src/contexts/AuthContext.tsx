@@ -29,6 +29,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setSession(session);
         setUser(session?.user ?? null);
         setLoading(false);
+        // SECURITY: strip OAuth tokens/code from URL after sign-in to prevent leak
+        // via browser history, Referer header, or extensions.
+        if (typeof window !== "undefined") {
+          const h = window.location.hash;
+          const s = window.location.search;
+          if (
+            h.includes("access_token") ||
+            h.includes("id_token") ||
+            h.includes("error_code") ||
+            /[?&]code=/.test(s)
+          ) {
+            window.history.replaceState({}, document.title, window.location.pathname);
+          }
+        }
       }
     );
 
